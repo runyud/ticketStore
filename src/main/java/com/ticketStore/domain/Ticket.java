@@ -1,13 +1,18 @@
 package com.ticketStore.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Ticket {
@@ -35,6 +40,10 @@ public class Ticket {
 	
 	@Transient
 	private MultipartFile ticketImage;
+	
+	@OneToMany(mappedBy="ticket")
+	@JsonIgnore
+	private List<TicketToCartItem> ticketToCartItemList;
 
 	public Long getId() {
 		return id;
@@ -170,6 +179,14 @@ public class Ticket {
 
 	public void setTicketImage(MultipartFile ticketImage) {
 		this.ticketImage = ticketImage;
+	}
+
+	public List<TicketToCartItem> getTicketToCartItemList() {
+		return ticketToCartItemList;
+	}
+
+	public void setTicketToCartItemList(List<TicketToCartItem> ticketToCartItemList) {
+		this.ticketToCartItemList = ticketToCartItemList;
 	}
 	
 	

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1000/xhtml">
+<head th:replace="common/header :: common-header" />
+
+<body>
+	<div th:replace="common/header :: navbar" />
+
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-8">
+				<h2 class="section-headline">
+					<span
+						th:text="${user} ? ${#strings.toUpperCase(user.username)} : 'All Tickets'"></span>
+				</h2>
+			</div>
+			<div class="col-xs-4">
+				<img src="/img/logo.png" style="width: 400px; height: 200px"
+					class="img-responsive" />
+			</div>
+		</div>
+		<hr
+			style="position: absolute; width: 85%; height: 6px; background-color: #333; z-index: -1; margin-top: -80px;" />
+		<img class="img-responsive" src="/img/wood.png"
+			style="margin-top: -65px;" />
+
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-xs-12">
+				<div class="row">
+					<div class="col-xs-6 text-left">
+						<a class="btn btn-warning" th:href="@{/ticketshelf}">Continue
+							Shopping</a>
+					</div>
+					<div class="col-xs-6 text-right">
+						<a class="btn btn-primary"
+							th:href="@{/checkout(id=${shoppingCart.id})}">Check Out</a>
+					</div>
+					<br />
+					<div th:if="${notEnoughStock}" class="alert alert-warning">
+						Sorry, some of the products are short or out of stock. Please
+						update quantity.</div>
+					<div th:if="${emptyCart}" class="alert alert-warning">Sorry,
+						your cart is empty. Please find your favorite tickets and add them
+						to the cart!</div>
+					<br/><br/>
+					<div class="row">
+						<div class="col-xs-8 center-block">
+							<h4 class="text-center">Products</h4>
+						</div>
+						<div class="col-xs-2">
+							<h4>Price</h4>
+						</div>
+						<div class="col-xs-2">
+							<h4>Quantity</h4>
+						</div>
+					</div>
+
+					<!-- display products in cart -->
+					<div class="row" th:each="cartItem : ${cartItemList}">
+						<form th:action="@{/shoppingCart/updateCartItem}" method="post">
+							<hr />
+							<div class="col-xs-2">
+								<a th:href="@{ticketDetail(id=${cartItem.ticket.id})}"> <img
+									style="width:100px;"
+									class="img-responsive shelf-ticket center-block"
+									th:src="${@environment.getProperty('adminPath')} + @{/img/ticket/} + ${cartItem.ticket.id} + '.png'" />
+								</a>
+							</div>
+							<div class="col-xs-6">
+								<div style="margin-left:50px;">
+								<a th:href="@{/ticketDetail?id=}+${cartItem.ticket.id}"><h4 th:text="${cartItem.ticket.title}"></h4></a>
+								<p th:if="${cartItem.ticket.inStockNumber&gt;10}"
+									style="color: green;">In Stock</p>
+								<p
+									th:if="${cartItem.ticket.inStockNumber&lt;10} and ${cartItem.ticket.inStockNumber&gt;0}"
+									style="color: green;">
+									Only <span th:text="${cartItem.ticket.inStockNumber}"></span> In
+									Stock
+								</p>
+								<p th:if="${cartItem.ticket.inStockNumber==0}"
+									style="color: darkred;">Out of Stock</p>
+								<a th:href="@{/shoppingCart/removeItem?id=}+${cartItem.id}">delete</a>
+								</div>
+							</div>
+
+							<div class="col-xs-2">
+								<h5 style="color: #db3208; font-size: large;">
+									$<span th:text="${cartItem.ticket.ourPrice}"
+										th:style="${cartItem.ticket.inStockNumber}==0? 'text-decoration: line-through' : ''"></span>
+								</h5>
+							</div>
+
+							<div class="col-xs-2">
+								<input hidden="hidden" name="id" th:value="${cartItem.id}" /> <input
+									th:id="${cartItem.id}" th:name="qty"
+									th:disabled="${cartItem.ticket.inStockNumber==0}"
+									class="form-control cartItemQty" th:value="${cartItem.qty}" />
+								<button style="display: none;"
+									th:id="'update-item-'+${cartItem.id}" type="submit"
+									class="btn btn-warning btn-xs">Update</button>
+							</div>
+						</form>
+					</div>
+
+					<div class="row">
+						<hr />
+						<h4 class="col-xs-12 text-right">
+							<strong style="font-size: large;">Total Price (<span
+								th:text="${#lists.size(cartItemList)}"></span> Items):
+							</strong> <span style="color: #db3208; font-size: large;">$<span
+								th:text="${shoppingCart.grandTotal}"></span></span>
+						</h4>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end of container -->
+
+
+	<div th:replace="common/header :: body-bottom-scripts" />
+</body>
+</html>
