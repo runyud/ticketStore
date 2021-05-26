@@ -11,12 +11,14 @@ import org.springframework.stereotype.Service;
 import com.ticketStore.domain.User;
 import com.ticketStore.domain.UserBilling;
 import com.ticketStore.domain.UserPayment;
+import com.ticketStore.domain.UserShipping;
 import com.ticketStore.domain.security.PasswordResetToken;
 import com.ticketStore.domain.security.UserRole;
 import com.ticketStore.repository.PasswordResetTokenRepository;
 import com.ticketStore.repository.RoleRepository;
 import com.ticketStore.repository.UserPaymentRepository;
 import com.ticketStore.repository.UserRepository;
+import com.ticketStore.repository.UserShippingRepository;
 import com.ticketStore.service.UserService;
 
 @Service
@@ -34,6 +36,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserPaymentRepository userPaymentRepository;
+	
+	@Autowired
+	private UserShippingRepository userShippingRepository;
 	
 	@Override
 	public PasswordResetToken getPasswordResetToken(final String token) {
@@ -88,6 +93,15 @@ public class UserServiceImpl implements UserService{
 		user.getUserPaymentList().add(userPayment);
 		save(user);
 	}
+	
+	@Override
+	public void updateUserShipping(UserShipping userShipping, User user) {
+		userShipping.setUser(user);
+		userShipping.setUserShippingDefault(true);
+		user.getUserShippingList().add(userShipping);
+		save(user);
+	}
+
 
 	@Override
 	public void setUserDefaultPayment(Long userPaymentId, User user) {
@@ -104,5 +118,21 @@ List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.fi
 		}
 		
 	}
+	
+	@Override
+	public void setUserDefaultShipping(Long userShippingId, User user) {
+		List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
+		
+		for (UserShipping userShipping : userShippingList) {
+			if(userShipping.getId() == userShippingId) {
+				userShipping.setUserShippingDefault(true);
+				userShippingRepository.save(userShipping);
+			} else {
+				userShipping.setUserShippingDefault(false);
+				userShippingRepository.save(userShipping);
+			}
+		}
+	}
 
+	
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import com.ticketStore.domain.User;
 import com.ticketStore.domain.UserBilling;
 import com.ticketStore.domain.UserPayment;
+import com.ticketStore.domain.UserShipping;
 import com.ticketStore.domain.security.PasswordResetToken;
 import com.ticketStore.domain.security.UserRole;
 
@@ -24,4 +25,8 @@ public interface UserService {
 	void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user);
 
 	void setUserDefaultPayment(Long defaultPaymentId, User user);
+
+	void updateUserShipping(UserShipping userShipping, User user);
+
+	void setUserDefaultShipping(Long defaultShippingId, User user);
 }
