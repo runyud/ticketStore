@@ -4,13 +4,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.bookstore</groupId>
-	<artifactId>bookstore</artifactId>
+	<groupId>com.ticketStore</groupId>
+	<artifactId>ticketStore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>Bookstore</name>
-	<description>frontend part for our bookstore project</description>
+	<name>Ticketstore</name>
+	<description>frontend part for the ticket store project </description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
