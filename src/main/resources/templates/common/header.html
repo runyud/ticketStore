@@ -14,6 +14,13 @@
 <!-- Custom styles for this template -->
 <link href="/css/style.css" rel="stylesheet" />
 
+<!-- data table -->
+<link th:href="@{/css/jquery.dataTables.min.css}" rel="stylesheet" />
+<link th:href="@{/css/dataTables.bootstrap.min.css}" rel="stylesheet" />
+
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+
+
 <link rel="icon" href="/img/apple-touch-icon.png" />
 </head>
 
@@ -33,7 +40,7 @@
 							data-toggle="dropdown" role="button" aria-haspopup="true"
 							aria-expanded="false">Tickets <span class="caret"></span></a>
 							<ul class="dropdown-menu">
-								<li><a href="@{/ticketshelf}">Browse the Events</a></li>
+								<li><a th:href="@{/ticketshelf}">Browse the Events</a></li>
 								<li><a href="#">Store hours &#38; Directions</a></li>
 								<li><a href="#">FAQ</a></li>
 
@@ -60,9 +67,11 @@
 	</div>
 
 	<div th:fragment="body-bottom-scripts">
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="/js/bootstrap.min.js"></script>
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<!-- data table -->
+		<script th:src="@{/js/jquery.dataTables.min.js}"></script>
+		<script th:src="@{/js/dataTables.bootstrap.min.js}"></script>
 	</div>
 </body>
 </html>

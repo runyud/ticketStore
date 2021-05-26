@@ -35,6 +35,7 @@ import com.ticketStore.domain.security.PasswordResetToken;
 import com.ticketStore.domain.security.Role;
 import com.ticketStore.domain.security.UserRole;
 import com.ticketStore.service.TicketService;
+import com.ticketStore.service.UserPaymentService;
 import com.ticketStore.service.UserService;
 import com.ticketStore.service.impl.UserSecurityService;
 import com.ticketStore.utils.MailConstructor;
@@ -58,6 +59,9 @@ public class HomeController {
 	
 	@Autowired
 	private TicketService ticketService;
+	
+	@Autowired
+	private UserPaymentService userPaymentService;
 
 	@RequestMapping("/")
 	public String index() {
@@ -158,7 +162,7 @@ public class HomeController {
 		model.addAttribute("userShippingList", user.getUserShippingList());
 //		model.addAttribute("orderList", user.getOrderList());
 		
-		model.addAttribute("listOfCreditcards", true);
+		model.addAttribute("listOfCreditCards", true);
 		model.addAttribute("classActiveBilling", true);
 		model.addAttribute("listOfShippingAddresses", true);
 		return "myProfile";
@@ -208,6 +212,57 @@ public class HomeController {
 		return "myProfile";	
 	}
 	
+	@RequestMapping("/updateCreditCard")
+	public String updateCreditCard(
+			@ModelAttribute("id") Long creditCardId, Principal principal, Model model) {
+		User user = userService.findByUsername(principal.getName());
+		UserPayment userPayment = userPaymentService.findById(creditCardId);
+		
+		// security check to make sure if it is the same person 
+		// trying to modify the credit card
+		if(user.getId() != userPayment.getUser().getId()) {
+			return "badRequestPage";
+		} else {
+			model.addAttribute("user", user);
+			UserBilling userBilling = userPayment.getUserBilling();
+			model.addAttribute("userPayment", userPayment);
+			model.addAttribute("userBilling", userBilling);
+			
+			List<String> stateList = USConstants.listOfUSStatesCode;
+			Collections.sort(stateList);
+			model.addAttribute("stateList", stateList);
+			
+			model.addAttribute("addNewCreditCard", true);
+			model.addAttribute("classActiveBilling", true);
+			model.addAttribute("listOfShippingAddresses", true);
+			
+			model.addAttribute("userPaymentList", user.getUserPaymentList());
+			model.addAttribute("userShippingList", user.getUserShippingList());
+			
+			return "myProfile";
+		}
+	}
+	
+	@RequestMapping(value="/addNewCreditCard", method=RequestMethod.POST)
+	public String addNewCreditCard(
+			@ModelAttribute("userPayment") UserPayment userPayment,
+			@ModelAttribute("userBilling") UserBilling userBilling,
+			Principal principal, Model model
+			) {
+		User user = userService.findByUsername(principal.getName());
+		userService.updateUserBilling(userBilling, userPayment, user);
+		
+		model.addAttribute("user", user);
+		model.addAttribute("userPaymentList", user.getUserPaymentList());
+		model.addAttribute("userShippingList", user.getUserShippingList());
+		model.addAttribute("listOfCreditCards", true);
+		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("listOfShippingAddress", true);
+		
+		return "myProfile";
+	}
+			
+			
 	@RequestMapping("/addNewShippingAddress")
 	public String addNewShippingAddress(
 			Model model, Principal principal
@@ -217,6 +272,7 @@ public class HomeController {
 		
 		model.addAttribute("addNewShippingAddress", true);
 		model.addAttribute("classActiveBilling", true);
+		model.addAttribute("listOfCreditCards", true);
 		
 		UserShipping userShipping = new UserShipping();
 		
