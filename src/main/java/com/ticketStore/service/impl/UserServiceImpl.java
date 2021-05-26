@@ -1,5 +1,6 @@
 package com.ticketStore.service.impl;
 
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import com.ticketStore.domain.security.PasswordResetToken;
 import com.ticketStore.domain.security.UserRole;
 import com.ticketStore.repository.PasswordResetTokenRepository;
 import com.ticketStore.repository.RoleRepository;
+import com.ticketStore.repository.UserPaymentRepository;
 import com.ticketStore.repository.UserRepository;
 import com.ticketStore.service.UserService;
 
@@ -29,6 +31,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private UserRepository userRepository; 
+	
+	@Autowired
+	private UserPaymentRepository userPaymentRepository;
 	
 	@Override
 	public PasswordResetToken getPasswordResetToken(final String token) {
@@ -82,6 +87,22 @@ public class UserServiceImpl implements UserService{
 		userBilling.setUserPayment(userPayment);
 		user.getUserPaymentList().add(userPayment);
 		save(user);
+	}
+
+	@Override
+	public void setUserDefaultPayment(Long userPaymentId, User user) {
+List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
+		
+		for (UserPayment userPayment : userPaymentList) {
+			if(userPayment.getId() == userPaymentId) {
+				userPayment.setDefaultPayment(true);
+				userPaymentRepository.save(userPayment);
+			} else {
+				userPayment.setDefaultPayment(false);
+				userPaymentRepository.save(userPayment);
+			}
+		}
+		
 	}
 
 }
