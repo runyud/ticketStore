@@ -249,11 +249,11 @@
 											</div>
 											<div class="row">
 												<div class="col-xs-12">
-													<img src="/image/creditcard.png" class="img-responsive" /><br />
+													<img src="/img/creditcard.png" class="img-responsive" /><br />
 													<div class="form-group">
 														<label for="cardType">* Select Card Type:</label> <select
 															class="form-control" id="cardType" th:name="type"
-															th:value="${userPayment.type}">
+															th:value="${userPayment.type}" th:field="*{userPayment.type}">
 															<option value="visa">Visa</option>
 															<option value="mastercard">Mastercard</option>
 															<option value="discover">Discover</option>
