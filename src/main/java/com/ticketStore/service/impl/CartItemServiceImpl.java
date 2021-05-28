@@ -78,6 +78,11 @@ public class CartItemServiceImpl implements CartItemService {
 		ticketToCartItemRepository.deleteByCartItem(cartItem);
 		cartItemRepository.delete(cartItem);
 	}
+
+	@Override
+	public void save(CartItem item) {
+		cartItemRepository.save(item);
+	}
 	
 
 }

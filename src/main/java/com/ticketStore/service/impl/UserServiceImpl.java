@@ -146,5 +146,10 @@ List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.fi
 		}
 	}
 
+	@Override
+	public User findById(long id) {
+		return userRepository.findOne(id);
+	}
+
 	
 }
