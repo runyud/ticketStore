@@ -6,11 +6,11 @@
 	<div th:replace="common/header :: navbar" />
 	
 	<div class="container ">
-		<div class="row">
+		<div class="row banner">
 
 			<!-- carousel -->
 			<div class="col-xs-8">
-				<div class="panel panel-default">
+				<div class="panel panel-default" style="margin-top:20px;">
 					<div class="panel-body">
 						<div id="carousel-example-generic" class="carousel slide"
 							data-ride="carousel">
@@ -180,7 +180,7 @@
 		</div>
 	</div>
 	<!-- end of container -->
-
+	<div th:replace="common/header :: footer" />
 	<div th:replace="common/header :: body-bottom-scripts" />
 </body>
 </html>

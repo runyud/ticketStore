@@ -100,9 +100,17 @@ public class HomeController {
 	}
 	
 	@RequestMapping("/ticketshelf")
-	public String ticketshelf(Model model) {
+	public String ticketshelf(Model model, Principal principal) {
+		if(principal != null) {
+			String username = principal.getName();
+			User user = userService.findByUsername(username);
+			model.addAttribute("user", user);
+		}
+		
 		List<Ticket> ticketList = ticketService.findAll();
 		model.addAttribute("ticketList", ticketList);
+		model.addAttribute("activeAll", true);
+		
 		return "ticketShelf";
 		
 	}

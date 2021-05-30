@@ -1,5 +1,6 @@
 package com.ticketStore.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,46 @@ public class TicketServiceImpl implements TicketService {
 	private TicketRepository ticketRepository;
 	
 	public List<Ticket> findAll() {
-		return (List<Ticket>) ticketRepository.findAll();
+		List<Ticket> ticketList = (List<Ticket>) ticketRepository.findAll();
+		List<Ticket> activeTicketList = new ArrayList<>(); 
+		for(Ticket ticket : ticketList) {
+			if(ticket.isActive()) {
+				activeTicketList.add(ticket);
+			}
+		}
+		return activeTicketList;
 	}
 
 	@Override
 	public Ticket findOne(Long id) {
 		return ticketRepository.findOne(id);
+	}
+
+	@Override
+	public List<Ticket> findByCategory(String category) {
+		List<Ticket> ticketList = ticketRepository.findByCategory(category);
+		List<Ticket> activeTicketList = new ArrayList<>();
+		
+		for(Ticket ticket : ticketList) {
+			if(ticket.isActive()) {
+				activeTicketList.add(ticket);
+			}
+		}
+		
+		return activeTicketList;
+	}
+
+	@Override
+	public List<Ticket> fuzzySearch(String keyword) {
+		List<Ticket> ticketList = ticketRepository.findByTitleContaining(keyword);
+		List<Ticket> activeTicketList = new ArrayList<>();
+		
+		for(Ticket ticket : ticketList) {
+			if(ticket.isActive()) {
+				activeTicketList.add(ticket);
+			}
+		}
+		
+		return activeTicketList;
 	}
 }
