@@ -48,15 +48,16 @@
 							<div class="panel panel-default" style="border: none;">
 								<div class="panel-body"
 									style="background-color: #ededed; margin-top: 20px;">
-									
+
 									<div class="alert alert-danger" th:if="${incorrectPassword}">
-										<strong>Incorrect Password!</strong> Please enter the correct password!
+										<strong>Incorrect Password!</strong> Please enter the correct
+										password!
 									</div>
-									
+
 									<div class="alert alert-success" th:if="${updateSuccess}">
 										<strong>Update Success!</strong>
 									</div>
-									
+
 									<form th:action="@{/updateUserInfo}" method="post">
 										<input type="hidden" name="id" th:value="${user.id}" />
 
@@ -102,22 +103,21 @@
 											change the password or receive any notifications.</p>
 
 										<div class="form-group">
-											<label for="txtNewPassword">Password</label>
-											&nbsp; <span id="checkPasswordMatch" style="color:red;"></span>
-											<input
+											<label for="txtNewPassword">Password</label> &nbsp; <span
+												id="checkPasswordMatch" style="color: red;"></span> <input
 												type="password" class="form-control" id="txtNewPassword"
 												name="newPassword" />
 										</div>
 
 										<div class="form-group">
-											<label for="txtConfirmPassword">Confirm Password</label> '
-											<input
+											<label for="txtConfirmPassword">Confirm Password</label> ' <input
 												type="password" class="form-control" id="txtConfirmPassword" />
 										</div>
 										<p style="color: #828282">To change the current user
 											password, enter the new password in both fields.</p>
 
-										<button id="updateUserInfoButton" type="submit" class="btn btn-primary">Save All</button>
+										<button id="updateUserInfoButton" type="submit"
+											class="btn btn-primary">Save All</button>
 									</form>
 								</div>
 							</div>
@@ -126,11 +126,159 @@
 
 					<!-- Order Information -->
 					<div class="tab-pane fade" id="tab-2"
-						th:classappend="${classActiveOrder}? 'in active'">
+						th:classappend="${classActiveOrders}? 'in active'">
 						<div class="panel-group">
 							<div class="panel panel-default" style="border: none;">
 								<div class="panel-body"
-									style="background-color: #ededed; margin-top: 20px;"></div>
+									style="background-color: #ededed; margin-top: 20px;">
+									<table class="table table-sm table-inverse">
+										<thead>
+											<tr>
+												<th>Order Date</th>
+												<th>Order Number</th>
+												<th>Total</th>
+												<th>Status</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr th:each="order : ${orderList}">
+												<td><a th:href="@{/orderDetail(id=${order.id})}"><span
+														th:text="${order.orderDate}"></span></a></td>
+												<td data-th-text="${order.id}"></td>
+												<td data-th-text="${order.orderTotal}"></td>
+												<td data-th-text="${order.orderStatus}"></td>
+											</tr>
+										</tbody>
+									</table>
+
+									<div th:if="${displayOrderDetail}">
+										<div class="row">
+											<div class="col-xs-12">
+												<div class="text-center">
+													<h2>
+														Order Detail for Purchase # <span th:text="${order.id}"></span>
+													</h2>
+												</div>
+												<hr />
+
+												<div class="row">
+													<div class="col-xs-4">
+														<div class="panel panel-default height">
+															<div class="panel-heading">
+																<strong>Billing Details</strong>
+															</div>
+															<div class="panel-body">
+																<span
+																	th:text="${order.billingAddress.billingAddressName}"></span><br />
+																<span
+																	th:text="${order.billingAddress.billingAddressStreet1}+' '+${order.billingAddress.billingAddressStreet2}"></span><br />
+																<span
+																	th:text="${order.billingAddress.billingAddressCity}"></span><br />
+																<span
+																	th:text="${order.billingAddress.billingAddressState}"></span><br />
+																<span
+																	th:text="${order.billingAddress.billingAddressZipcode}"></span><br />
+															</div>
+														</div>
+													</div>
+													<div class="col-xs-4">
+														<div class="panel panel-default height">
+															<div class="panel-heading">
+																<strong>Payment Information</strong>
+															</div>
+															<div class="panel-body">
+																<span th:text="${order.payment.holderName}">Card
+																	Name</span><br /> <span th:text="${order.payment.cardNumber}">Card
+																	Number</span><br /> <span>Expiration Date: </span><span
+																	th:text="${order.payment.expiryMonth}"></span>/<span
+																	th:text="${order.payment.expiryYear}"></span><br />
+															</div>
+														</div>
+													</div>
+													<div class="col-xs-4">
+														<div class="panel panel-default height">
+															<div class="panel-heading">
+																<strong>Billing Details</strong>
+															</div>
+															<div class="panel-body">
+																<span
+																	th:text="${order.shippingAddress.shippingAddressName}"></span><br />
+																<span
+																	th:text="${order.shippingAddress.shippingAddressStreet1}+' '+${order.shippingAddress.shippingAddressStreet2}"></span><br />
+																<span
+																	th:text="${order.shippingAddress.shippingAddressCity}"></span><br />
+																<span
+																	th:text="${order.shippingAddress.shippingAddressState}"></span><br />
+																<span
+																	th:text="${order.shippingAddress.shippingAddressZipcode}"></span><br />
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+										<div class="row">
+											<div class="col-md-12">
+												<div class="panel-heading">
+													<h3 class="text-center">
+														<strong>Order Summary</strong>
+													</h3>
+												</div>
+												<div class="panel-body">
+													<div class="table-responsive">
+														<table class="table table-condensed">
+															<thead>
+																<tr>
+																	<td><strong>Item Name</strong></td>
+																	<td class="text-center"><strong>Item
+																			Price</strong></td>
+																	<td class="text-center"><strong>Item
+																			Quantity</strong></td>
+																	<td class="text-right"><strong>Total</strong></td>
+																</tr>
+															</thead>
+															<tbody>
+																<tr th:each="cartItem : ${cartItemList}">
+																	<td data-th-text="${cartItem.ticket.title}"></td>
+																	<td class="text-center"
+																		data-th-text="${cartItem.ticket.ourPrice}"></td>
+																	<td class="text-center" data-th-text="${cartItem.qty}"></td>
+																	<td class="text-center"
+																		data-th-text="${cartItem.subtotal}"></td>
+																</tr>
+																<tr>
+																	<td class="highrow"></td>
+																	<td class="highrow"></td>
+																	<td class="highrow text-center"><strong>Subtotal</strong></td>
+																	<td class="highrow text-right"
+																		data-th-text="${order.orderTotal}"></td>
+																</tr>
+																<tr>
+																	<td class="emptyrow"></td>
+																	<td class="emptyrow"></td>
+																	<td class="emptyrow text-center"><strong>Tax</strong></td>
+																	<td class="emptyrow text-right"
+																		data-th-text="${#numbers.formatDecimal(order.orderTotal*0.06,0,2)}"></td>
+																</tr>
+																<tr>
+																	<td class="emptyrow"><i
+																		class="fa fa-barcode iconbig"></i></td>
+																	<td class="emptyrow"></td>
+																	<td class="emptyrow text-center"><strong>Total</strong></td>
+																	<td
+																		th:with="total=${order.orderTotal+order.orderTotal*0.06}"
+																		data-th-text="${#numbers.formatDecimal(total,0,2)}"
+																		class="emptyrow text-right"></td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -264,7 +412,8 @@
 													<div class="form-group">
 														<label for="cardType">* Select Card Type:</label> <select
 															class="form-control" id="cardType" th:name="type"
-															th:value="${userPayment.type}" th:field="*{userPayment.type}">
+															th:value="${userPayment.type}"
+															th:field="*{userPayment.type}">
 															<option value="visa">Visa</option>
 															<option value="mastercard">Mastercard</option>
 															<option value="discover">Discover</option>
@@ -299,8 +448,10 @@
 															<div class="col-xs-6">
 																<select class="form-control" name="expiryMonth"
 																	required="required"
-																	th:value="${userPayment.expiryMonth}" th:field="*{userPayment.expiryMonth}">
-																	<option disabled="disabled" value="00">-- Month --</option>
+																	th:value="${userPayment.expiryMonth}"
+																	th:field="*{userPayment.expiryMonth}">
+																	<option disabled="disabled" value="00">--
+																		Month --</option>
 																	<option value="01">Jan (01)</option>
 																	<option value="02">Feb (02)</option>
 																	<option value="03">Mar (03)</option>
@@ -317,8 +468,10 @@
 															</div>
 															<div class="col-xs-6">
 																<select class="form-control" name="expiryYear"
-																	th:value="${userPayment.expiryYear}" th:field="*{userPayment.expiryYear}">
-																	<option disabled="disabled" value="00">-- Year --</option>
+																	th:value="${userPayment.expiryYear}"
+																	th:field="*{userPayment.expiryYear}">
+																	<option disabled="disabled" value="00">-- Year
+																		--</option>
 																	<option value="2021">2021</option>
 																	<option value="2022">2022</option>
 																	<option value="2023">2023</option>
@@ -367,8 +520,8 @@
 									<ol class="breadcrumb">
 										<li class="breadcrumb-item active"><a
 											th:href="@{/listOfShippingAddresses}"
-											th:style="${listOfShippingAddresses}? 'color:red'">List of
-												Shipping Addresses</a></li>
+											th:style="${listOfShippingAddresses}? 'color:red'">List
+												of Shipping Addresses</a></li>
 										<li class="breadcrumb-item active"><a
 											th:href="@{/addNewShippingAddress}"
 											th:style="${addNewShippingAddress}? 'color:red'">Add(Update)
@@ -387,10 +540,12 @@
 												</thead>
 												<tbody>
 													<tr th:each="userShipping : ${userShippingList}">
-														<td><input type="radio" name="defaultShippingAddressId"
+														<td><input type="radio"
+															name="defaultShippingAddressId"
 															th:value="${userShipping.id}"
 															th:checked="${userShipping.userShippingDefault}" /><span>default</span></td>
-														<td th:text="${userShipping.userShippingStreet1}+', '+
+														<td
+															th:text="${userShipping.userShippingStreet1}+', '+
 														${userShipping.userShippingCity}+', '+${userShipping.userShippingState}"></td>
 														<td><a
 															th:href="@{/updateUserShipping(id=${userShipping.id})}"><i
@@ -409,7 +564,8 @@
 											<div class="bg-info" th:if="${updateUserShippingInfo}">User
 												info updated.</div>
 
-											<input hidden="hidden" name="id" th:value="${userShipping.id}" />
+											<input hidden="hidden" name="id"
+												th:value="${userShipping.id}" />
 
 											<!-- Shipping Address -->
 											<hr />
@@ -426,8 +582,8 @@
 											<div class="form-group">
 												<label for="shippingAddress">* Street Address</label> <input
 													type="text" class="form-control" id="shippingAddress"
-													placeholder="Street Address 1" th:name="userShippingStreet1"
-													required="required"
+													placeholder="Street Address 1"
+													th:name="userShippingStreet1" required="required"
 													th:value="${userShipping.userShippingStreet1}" /> <input
 													type="text" class="form-control"
 													placeholder="Street Address 2" th:name="userShppingStreet2"
@@ -437,8 +593,8 @@
 											<div class="row">
 												<div class="col-xs-4">
 													<div class="form-group">
-														<label for="shippingCity">* City</label> <input type="text"
-															class="form-control" id="shippingCity"
+														<label for="shippingCity">* City</label> <input
+															type="text" class="form-control" id="shippingCity"
 															placeholder="Shipping City" th:name="userShippingCity"
 															required="required"
 															th:value="${userShipping.userShippingCity}" />

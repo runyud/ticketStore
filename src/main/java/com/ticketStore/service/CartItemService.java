@@ -3,6 +3,7 @@ package com.ticketStore.service;
 import java.util.List;
 
 import com.ticketStore.domain.CartItem;
+import com.ticketStore.domain.Order;
 import com.ticketStore.domain.ShoppingCart;
 import com.ticketStore.domain.Ticket;
 import com.ticketStore.domain.User;
@@ -20,5 +21,7 @@ public interface CartItemService {
 	void removeCartItem(CartItem findById);
 
 	void save(CartItem item);
+
+	List<CartItem> findByOrder(Order order);
 
 }

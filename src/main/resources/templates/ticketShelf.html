@@ -6,10 +6,11 @@
 	<div th:replace="common/header :: navbar" />
 
 	<div class="container">
-		<div class="row">
+		<div class="row" style="margin-bottom: -100px;">
 			<div class="col-xs-8">
 				<h2 class="section-headline">
-					<span th:text="${user} ? ${#strings.toUpperCase(user.username)} : 'All Tickets'"></span>
+					<span
+						th:text="${user} ? ${#strings.toUpperCase(user.username)} : 'All Tickets'"></span>
 				</h2>
 			</div>
 			<div class="col-xs-4">
@@ -39,26 +40,30 @@
 						<tr class="ticket-item" data-th-each="ticket : ${ticketList}">
 							<td>
 								<div th:if="${ticket != null}">
-									<div class="row">
+									<div class="row" style="margin-bottom: 50px">
 										<div class="col-xs-3">
-											<a th:href="@{/ticketDetail?id=}+${ticket.id}">
-											<img class="img-responsive shelf-ticket"
+											<a th:href="@{/ticketDetail?id=}+${ticket.id}"> <img
+												class="img-responsive shelf-ticket"
 												th:src="${@environment.getProperty('adminPath')} + @{/img/ticket/} + ${ticket.id} + '.png'" /></a>
 										</div>
 										<div class="col-xs-9">
-											<a th:href="@{/ticketDetail?id=}+${ticket.id}"> <h4 th:text="${ticket.title}"></h4> </a>
-											<span th:text="${ticket.eventDate}"></span>
-											<span th:text="${ticket.venue}"></span>
-											<a th:href="@{/ticketDetail?id=}+${ticket.id}"> <span th:text="${#strings.capitalize(ticket.format)}"></span> </a>
-											<span th:text="${ticket.capacity}"><span>people</span></span><br/>
-											
-											<a th:href="@{/ticketDetail?id=}+${ticket.id}"><span style="font-size:x-large;color:#db3208;">$<span
-											th:text="${#numbers.formatDecimal(ticket.ourPrice,0,'COMMA',2,'POINT')}"></span></span></a>
-											
-											<span style="text-decoration:line-through">$<span
-											th:text="${#numbers.formatDecimal(ticket.listPrice,0,'COMMA',2,'POINT')}"></span></span>
-											
-											<p th:utext="${#strings.abbreviate(ticket.description, 1000)}"></p>
+											<a th:href="@{/ticketDetail?id=}+${ticket.id}">
+												<h4 th:text="${ticket.title}"></h4>
+											</a> <span th:text="${ticket.eventDate}"></span> <span
+												th:text="${ticket.venue}"></span> <a
+												th:href="@{/ticketDetail?id=}+${ticket.id}"> <span
+												th:text="${#strings.capitalize(ticket.format)}"></span>
+											</a> <span th:text="${ticket.capacity}"><span>people</span></span><br />
+
+											<a th:href="@{/ticketDetail?id=}+${ticket.id}"><span
+												style="font-size: x-large; color: #db3208;">$<span
+													th:text="${#numbers.formatDecimal(ticket.ourPrice,0,'COMMA',2,'POINT')}"></span></span></a>
+
+											<span style="text-decoration: line-through">$<span
+												th:text="${#numbers.formatDecimal(ticket.listPrice,0,'COMMA',2,'POINT')}"></span></span>
+
+											<p
+												th:utext="${#strings.abbreviate(ticket.description, 1000)}"></p>
 										</div>
 									</div>
 								</div>
@@ -73,5 +78,21 @@
 
 
 	<div th:replace="common/header :: body-bottom-scripts" />
+	
+	<script>
+		$(document).ready(function() {
+			$('#ticketList').DataTable({
+				"lengthMenu":[[5,10,15,20,-1],[5,10,15,20,"All"]],
+				"ordering":false,
+				stateSave:true
+			});
+			
+			$("#ticketList").on('page.dt', function() {
+				$('html, body').animate({
+					scrollTop: $('#ticketList').offset().top
+				}, 200);
+			});
+		});
+	</script>
 </body>
 </html>
